@@ -1,4 +1,4 @@
-name: Read IAM Lab 3 Flag
+name: Read Azure Flag
 
 on:
   workflow_dispatch:
@@ -14,17 +14,17 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Azure login via OIDC
+      - name: Login to Azure via OIDC
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          auth-type: "OIDC"
 
-      - name: Read flag blob via Azure CLI
+      - name: Read blob and output flag
         uses: azure/cli@v2
         with:
+          azcliversion: latest
           inlineScript: |
             az storage blob download \
               --account-name iamazurelab3f69ef6de \
