@@ -1,0 +1,36 @@
+name: Read IAM Lab 3 Flag
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  read-flag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Azure login via OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          auth-type: "OIDC"
+
+      - name: Read flag blob via Azure CLI
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            az storage blob download \
+              --account-name iamazurelab3f69ef6de \
+              --container-name flag \
+              --name flag.txt \
+              --file flag.txt \
+              --auth-mode login
+            echo "===== FLAG ====="
+            cat flag.txt
